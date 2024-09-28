@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">Assignment2</string>
+    <string name="sign_up">SignUpPage</string>
+    <string name="login">LoginPage</string>
+    <string name="reset_password">ResetPassword</string>
+    <string name="flower_home">Homepage</string>
+    <string name="user_profile">UserProfile</string>
+    <string name="welcome">Welcome</string>
+    <string name="product_inventory">ProductInventory</string>
+    <string name="product_detail">product_detail</string>
+    <string name="add_product">add_product</string>
+    <string name="cart">Cart</string>
+    <string name="check_out">Check Out</string>
+    <string name="payment_Method">Payment Method</string>
+    <string name="credit_card">Credit Card</string>
+    <string name="payment_success">Payment Success</string>
+    <string name="order_id">Order ID</string>
+    <string name="order_copy_id">Copy</string>
+    <string name="order_price">RM %s</string>
+    <string name="track_order">Track Order</string>
+    <string name="my_order">My Order</string>
+    <string name="your_order_id">Your Order ID</string>
+    <string name="check_my_order">Check My Order</string>
+    <string name="view_detail"><![CDATA[view detail >]]></string>
+    <string name="order_detail">Order Detail</string>
+    <string name="update">Update</string>
+    <string name="paste_order_id">Paste</string>
+    <string name="order_management">Order Management</string>
+    <string name="product">product\n</string>
+
+</resources>
