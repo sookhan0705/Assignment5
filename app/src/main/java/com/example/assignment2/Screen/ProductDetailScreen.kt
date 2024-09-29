@@ -43,7 +43,6 @@ fun ProductDetailScreen(productId: String,viewModel: ProductDetailViewModel= vie
   val restockQuantity by viewModel.restockQuantity.collectAsState()
 
 Column(modifier = Modifier){
-  appBar(name = "Product Detail", canNavigate = true , navigateUp = { /*TODO*/ })
   if (selectedProduct == null) {
     Text(text = "Loading...")
   } else {

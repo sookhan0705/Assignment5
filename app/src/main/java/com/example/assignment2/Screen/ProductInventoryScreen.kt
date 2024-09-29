@@ -175,7 +175,7 @@ fun ProductInventoryScreen(repository:ProductRepo, modifier: Modifier = Modifier
                                     horizontalAlignment = Alignment.Start
                                 ) {
                                     Text(
-                                        text = product.productQuantity + "Unit",
+                                        text = product.productQuantity + " Unit",
                                         modifier = Modifier.padding(start = 12.dp)
                                     )
                                     Text(text = "In Stock")
@@ -184,7 +184,7 @@ fun ProductInventoryScreen(repository:ProductRepo, modifier: Modifier = Modifier
                                     modifier = Modifier.weight(1f),
                                     horizontalAlignment = Alignment.CenterHorizontally
                                 ) {
-                                    Text(text = product.LastRestock + "Unit")
+                                    Text(text = product.LastRestock + " Unit")
                                     Text(text = "Last Restock", textAlign = TextAlign.Center)
                                 }
                             }
