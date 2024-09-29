@@ -8,25 +8,19 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.assignment2.R
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-
 
 @Composable
 fun ResetPasswordScreen(navController: NavHostController, viewModel: StoreViewModel) {
     val uiState by viewModel.uiState.collectAsState()
-
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -36,15 +30,14 @@ fun ResetPasswordScreen(navController: NavHostController, viewModel: StoreViewMo
             .background(Color(0xFFFDEDED)) // Light pink background
             .padding(16.dp)
     ) {
-        // Logo or branding
         Image(
-            painter = painterResource(id = R.drawable.drawing), // Replace with your logo resource
+            painter = painterResource(id = R.drawable.bloomthis),
             contentDescription = "Logo",
             modifier = Modifier
-                .size(140.dp)
-                .padding(bottom = 32.dp) // Padding from the top
+                .padding(bottom = 20.dp)
+                .size(200.dp)  // Adjust size as needed
+                .clip(androidx.compose.foundation.shape.CircleShape) // Make the image circular
         )
-
 
         // Instruction Text
         Text(
@@ -55,7 +48,6 @@ fun ResetPasswordScreen(navController: NavHostController, viewModel: StoreViewMo
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(bottom = 24.dp)
         )
-
 
         // Email Text Field
         OutlinedTextField(
@@ -68,7 +60,6 @@ fun ResetPasswordScreen(navController: NavHostController, viewModel: StoreViewMo
                 .height(56.dp),
             shape = RoundedCornerShape(8.dp)
         )
-
 
         // Reset Button
         Button(
@@ -86,7 +77,6 @@ fun ResetPasswordScreen(navController: NavHostController, viewModel: StoreViewMo
             Text(text = "Send", fontSize = 16.sp, color = Color.White)
         }
 
-
         // Error Message (if any)
         if (uiState.errorMessage != null) {
             Text(
@@ -96,10 +86,8 @@ fun ResetPasswordScreen(navController: NavHostController, viewModel: StoreViewMo
             )
         }
 
-
         // Spacer between button and back to login
         Spacer(modifier = Modifier.height(16.dp))
-
 
         // Back to Login Link
         TextButton(
@@ -113,5 +101,6 @@ fun ResetPasswordScreen(navController: NavHostController, viewModel: StoreViewMo
         }
     }
 }
+
 
 

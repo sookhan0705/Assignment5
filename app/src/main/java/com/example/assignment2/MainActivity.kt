@@ -12,26 +12,50 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.room.Room
 import com.example.assignment2.Data.AppDatabase
 import com.example.assignment2.Data.OrderDatabase
 import com.example.assignment2.Data.OrderRepo
 import com.example.assignment2.Data.ProductRepo
+import com.example.assignment2.Data.UserDatabase
+import com.example.assignment2.Data.UserFactory
+import com.example.assignment2.Data.UserRepository
 import com.example.assignment2.Screen.AddProductScreen
 import com.example.assignment2.Screen.FlowerApp
 import com.example.assignment2.Screen.ProductDetailScreen
 import com.example.assignment2.Screen.ProductInventoryScreen
+import com.example.assignment2.Screen.StoreViewModel
 import com.example.assignment2.ui.theme.Assignment2Theme
+import com.google.firebase.FirebaseApp
 
 class MainActivity : ComponentActivity() {
+
+    // Initialize Room Database lazily
+    private val db by lazy {
+        Room.databaseBuilder(
+            applicationContext,
+            UserDatabase::class.java,
+            "user.db"
+        ).build()
+    }
+
     private lateinit var productRepository: ProductRepo
     private lateinit var orderRepo: OrderRepo
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        FirebaseApp.initializeApp(this)
         val productDao = AppDatabase.getDatabase(this).productDao()
         productRepository = ProductRepo(productDao)
         val orderDao = OrderDatabase.getDatabase(this).orderDao()
@@ -50,7 +74,14 @@ class MainActivity : ComponentActivity() {
 //                    ProductInventoryScreen(modifier = Modifier, navController = rememberNavController())
 //                   AddProductScreen()
 //                    AppNavHost(productRepository)
-                    FlowerApp(productRepo = productRepository,orderRepo = orderRepo)
+                    val viewModel: StoreViewModel = viewModel(
+                        factory = UserFactory(
+                            context = applicationContext,
+                            database = db
+                        )
+                    )
+
+                    FlowerApp(productRepo = productRepository,orderRepo = orderRepo, viewModel = viewModel)
                 }
 
             }

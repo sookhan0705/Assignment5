@@ -3,6 +3,13 @@ buildscript {
     extra.apply {
         set("room_version", "2.6.0")
     }
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath ("com.google.gms:google-services:4.4.2")
+    }
 }
 
 plugins {

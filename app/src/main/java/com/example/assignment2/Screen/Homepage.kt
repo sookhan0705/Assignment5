@@ -1,46 +1,43 @@
 package com.example.assignment2.Screen
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
 import com.example.assignment2.Data.CategoryItems
 import com.example.assignment2.Data.ProductItem
 import com.example.assignment2.R
 
-
 @Composable
-fun Homepage(viewModel: StoreViewModel,navController: NavController) {
+fun Homepage(navController: NavHostController, viewModel: StoreViewModel) {
     // Collect the UI state from the ViewModel
     val uiState by viewModel.uiState.collectAsState()
-
 
     // Main Column to hold all components of the homepage
     Column(
@@ -62,21 +59,21 @@ fun Homepage(viewModel: StoreViewModel,navController: NavController) {
         // Banner Section
         Banner(bannerText = uiState.bannerText)
 
-
+        // Category Title
         Box(
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .background(Color(0xFFB2B2B2)),
             contentAlignment = Alignment.Center
         ) {
             Text(
                 text = "Category",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Normal,
-                color = Color.Black,
+                color = Color.White,
                 textAlign = TextAlign.Center
             )
         }
-
 
         // Category List Section
         CategoryList(
@@ -85,60 +82,77 @@ fun Homepage(viewModel: StoreViewModel,navController: NavController) {
             selectedCategory = uiState.selectedCategory  // Highlight selected category
         )
 
-
+        // Product Title
         Box(
             modifier = Modifier
-                .fillMaxWidth(), // Make the Box fill the width of the screen
-            contentAlignment = Alignment.Center // Center the content inside the Box
+                .fillMaxWidth()
+                .background(Color(0xFFB2B2B2)),
+            contentAlignment = Alignment.Center
         ) {
             Text(
                 text = "Product",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Normal,
-                color = Color.Black,
-                textAlign = TextAlign.Center // Align text in the center within the Text composable
+                color = Color.White,
+                textAlign = TextAlign.Center
             )
         }
 
-
-
-
         // Product List Section (Filtered by selected category)
-        ProductList(products = uiState.products, navController =navController )  // Display the filtered products
+        ProductList(products = uiState.products)  // Display the filtered products
+
+        // "See All" Button
+        TextButton(onClick = { navController.navigate(FlowerScreen.Profile.name) },
+            modifier = Modifier
+                .fillMaxWidth()) {
+            Text(
+                text = "See All",
+                modifier = Modifier.fillMaxWidth(),  // Ensures that the text takes up the full width
+                textAlign = TextAlign.Center,
+                color = Color.Blue,
+            )
+        }
     }
 }
 
-
 @Composable
 fun SearchRow(searchQuery: String, onSearchChange: (String) -> Unit, onSearchClick: () -> Unit) {
+    val focusRequester = remember { FocusRequester() }
+    var hasFocus by remember { mutableStateOf(false) }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 48.dp, start = 16.dp, end = 8.dp),
+            .padding(top = 30.dp, start = 16.dp, end = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         TextField(
             value = searchQuery,
-            onValueChange = onSearchChange, // Trigger search query change
-            label = { Text(text = "Search...", fontStyle = FontStyle.Italic, fontSize = 20.sp) },
+            onValueChange = onSearchChange,
+            label = {
+                if (!hasFocus && searchQuery.isEmpty()) {
+                    Text(text = "Search...", fontStyle = FontStyle.Italic, fontSize = 20.sp)
+                }
+            },
             leadingIcon = {
-                IconButton(onClick = onSearchClick) { // Trigger search on icon click
+                IconButton(onClick = onSearchClick) {
                     Icon(imageVector = Icons.Default.Search, contentDescription = "Search")
                 }
             },
             shape = RoundedCornerShape(10.dp),
             modifier = Modifier
                 .fillMaxWidth()
+                .focusRequester(focusRequester)
+                .onFocusChanged { focusState ->
+                    hasFocus = focusState.isFocused
+                }
                 .border(1.dp, Color(android.graphics.Color.parseColor("#521c98")), shape = RoundedCornerShape(8.dp))
-                .background(Color.White, CircleShape)
+                .background(Color.White),
+            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Search),
+            keyboardActions = KeyboardActions(onSearch = { onSearchClick() })
         )
     }
 }
-
-
-
-
-
 
 @Composable
 fun Banner(bannerText: String) {
@@ -150,6 +164,8 @@ fun Banner(bannerText: String) {
             .background(Color.White, shape = RoundedCornerShape(10.dp))
     ) {
         val (img, text, button) = createRefs()
+
+        // Banner image
         Image(
             painter = painterResource(id = R.drawable.banner),
             contentDescription = null,
@@ -161,7 +177,7 @@ fun Banner(bannerText: String) {
                 }
         )
 
-
+        // Banner text
         Text(
             text = bannerText,
             fontSize = 16.sp,
@@ -175,7 +191,7 @@ fun Banner(bannerText: String) {
                 }
         )
 
-
+        // Buy now button
         Text(
             text = "Buy Now",
             fontSize = 14.sp,
@@ -193,7 +209,6 @@ fun Banner(bannerText: String) {
     }
 }
 
-
 @Composable
 fun CategoryList(categories: List<CategoryItems>, onCategoryClick: (String) -> Unit, selectedCategory: String) {
     LazyRow(
@@ -208,13 +223,15 @@ fun CategoryList(categories: List<CategoryItems>, onCategoryClick: (String) -> U
                     .height(180.dp)
                     .width(150.dp)
                     .shadow(3.dp, shape = RoundedCornerShape(10.dp))
-                    .background(if (isSelected) Color.Gray else Color.White, shape = RoundedCornerShape(10.dp))
+                    .background(
+                        if (isSelected) Color(0xFFFFC1E3)
+                        else Color(0xFFFDEDED),
+                        shape = RoundedCornerShape(10.dp))
                     .fillMaxWidth()
                     .clickable { onCategoryClick(item.name) }
             ) {
                 ConstraintLayout(modifier = Modifier.height(IntrinsicSize.Max)) {
                     val (topImg, name) = createRefs()
-
 
                     Image(
                         painter = painterResource(id = item.picUrl),
@@ -225,19 +242,21 @@ fun CategoryList(categories: List<CategoryItems>, onCategoryClick: (String) -> U
                             .constrainAs(topImg) {
                                 top.linkTo(parent.top)
                                 start.linkTo(parent.start)
+                                end.linkTo(parent.end) // Center the image horizontally
                             },
                         contentScale = ContentScale.Crop
                     )
 
-
                     Text(
                         text = item.name,
+                        fontWeight = FontWeight.Bold,
                         modifier = Modifier
                             .constrainAs(name) {
-                                start.linkTo(parent.start)
                                 top.linkTo(topImg.bottom)
+                                centerHorizontallyTo(parent) // Center the text horizontally
                             }
-                            .padding(start = 45.dp, top = 8.dp)
+                            .padding(top = 3.dp),
+                        fontSize = 14.sp
                     )
                 }
             }
@@ -247,7 +266,7 @@ fun CategoryList(categories: List<CategoryItems>, onCategoryClick: (String) -> U
 
 
 @Composable
-fun ProductList(products: List<ProductItem>,navController: NavController) {
+fun ProductList(products: List<ProductItem>) {
     LazyRow(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(16.dp),
@@ -257,21 +276,17 @@ fun ProductList(products: List<ProductItem>,navController: NavController) {
             Column(
                 modifier = Modifier
                     .height(200.dp)
-                    .width(180.dp)
+                    .width(150.dp)
                     .shadow(3.dp, shape = RoundedCornerShape(10.dp))
-                    .background(Color.White, shape = RoundedCornerShape(10.dp))
+                    .background(Color(0xFFFDEDED), shape = RoundedCornerShape(10.dp))
                     .fillMaxWidth()
-                    .clickable {
-                        navController.navigate(FlowerScreen.Product.name)
-                    }
             ) {
                 ConstraintLayout(modifier = Modifier.height(IntrinsicSize.Max)) {
                     val (topImg, name, price) = createRefs()
 
-
-                    // Display product image
+                    // Product image
                     Image(
-                        painter = rememberAsyncImagePainter(model = product.photo), // Product image URL from Firestore
+                        painter = rememberAsyncImagePainter(model = product.photo),
                         contentDescription = null,
                         Modifier
                             .fillMaxWidth()
@@ -279,39 +294,38 @@ fun ProductList(products: List<ProductItem>,navController: NavController) {
                             .constrainAs(topImg) {
                                 top.linkTo(parent.top)
                                 start.linkTo(parent.start)
+                                end.linkTo(parent.end)
                             },
                         contentScale = ContentScale.Crop
                     )
 
-
-                    // Display product name
+                    // Product name
                     Text(
                         text = product.productName,
+                        fontWeight = FontWeight.Bold,
                         modifier = Modifier
                             .constrainAs(name) {
-                                start.linkTo(parent.start)
                                 top.linkTo(topImg.bottom)
+                                centerHorizontallyTo(parent)
                             }
-                            .padding(start = 50.dp, top = 5.dp)
+                            .padding(top = 3.dp),
+                        fontSize = 17.sp
                     )
 
-
-                    // Display product price
+                    // Product price
                     Text(
                         text = "RM${product.productPrice}",
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Red,
+                        color = Color.Black,
                         modifier = Modifier
                             .constrainAs(price) {
-                                start.linkTo(parent.start)
                                 top.linkTo(name.bottom)
+                                centerHorizontallyTo(parent)
                             }
-                            .padding(start = 50.dp, top = 5.dp)
+                            .padding(top = 2.dp)
                     )
                 }
             }
         }
     }
 }
-
 
