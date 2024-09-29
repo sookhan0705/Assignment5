@@ -101,7 +101,7 @@ fun LoginScreen(navController: NavHostController, viewModel: StoreViewModel) {
 
             // Login Button
             Button(
-                onClick = { viewModel.login { navController.navigate(FlowerScreen.FlowerHome.name) } },
+                onClick = { viewModel.login { navController.navigate(FlowerScreen.ProductInventory.name) } },
                 modifier = Modifier
                     .width(180.dp)
                     .padding(top = 16.dp),

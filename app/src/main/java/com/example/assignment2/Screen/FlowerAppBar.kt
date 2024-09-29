@@ -98,6 +98,10 @@ fun FlowerApp(
         FlowerScreen.Login.name,
         FlowerScreen.ResetPassword.name,
         FlowerScreen.TrackOrder.name,
+        FlowerScreen.ProductInventory.name,
+        FlowerScreen.AddProduct.name,
+        FlowerScreen.AdminOrderManagement.name,
+        FlowerScreen.AdminOrderDetail.name
     )
 
     val AdminBottomBarScreens = listOf(
@@ -230,7 +234,7 @@ fun FlowerApp(
             composable(route = FlowerScreen.PaymentSuccess.name) {
                 PaymentSuccessfulScreen(
                     onDoneButtonClicked = {
-                        navController.popBackStack(FlowerScreen.PaymentMethod.name, inclusive = false)
+                        navController.navigate(FlowerScreen.FlowerHome.name)
                     },
                     modifier = Modifier.fillMaxSize()
                 )

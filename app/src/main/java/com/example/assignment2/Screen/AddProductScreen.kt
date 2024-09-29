@@ -71,7 +71,7 @@ fun AddProductScreen(addProductViewModel: AddProductViewModel = viewModel()){
     val scrollState = rememberScrollState()
     val context = LocalContext.current
     Column(modifier = Modifier
-        .fillMaxSize()
+        .fillMaxWidth()
         .verticalScroll(enabled = true, state = scrollState)
         , horizontalAlignment = Alignment.CenterHorizontally) {
         OutlinedTextField(

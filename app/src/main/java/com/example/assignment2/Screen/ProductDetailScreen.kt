@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -41,8 +43,9 @@ fun ProductDetailScreen(productId: String,viewModel: ProductDetailViewModel= vie
   val productPrice by viewModel.productPrice.collectAsState()
   val productQuantity by viewModel.productQuantity.collectAsState()
   val restockQuantity by viewModel.restockQuantity.collectAsState()
+  val scrollState =rememberScrollState()
 
-Column(modifier = Modifier){
+Column(modifier = Modifier.verticalScroll(scrollState)){
   if (selectedProduct == null) {
     Text(text = "Loading...")
   } else {
