@@ -104,4 +104,21 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.4.0")
     implementation("androidx.compose.ui:ui-tooling-preview:1.4.2")
 
+    // Firebase dependencies
+    implementation(platform("com.google.firebase:firebase-bom:32.0.0"))  // Firebase BoM (Always keep this at the top)
+    implementation("com.google.firebase:firebase-firestore:25.1.0")              // Firestore
+    implementation("com.google.firebase:firebase-database")
+    implementation ("com.google.firebase:firebase-auth")
+    implementation ("com.google.firebase:firebase-auth:23.0.0")
+    implementation ("com.google.firebase:firebase-storage:20.0.0")
+    implementation ("io.coil-kt:coil-compose:2.1.0")
+    implementation ("com.google.firebase:firebase-storage:latest_version")
+
+    implementation("androidx.room:room-runtime:2.5.0")
+    ksp("androidx.room:room-compiler:2.5.0")
+    implementation("androidx.room:room-ktx:2.5.0")
+
+    //google
+    implementation ("com.google.android.gms:play-services-auth:20.6.0") // Google Sign-In
+
 }

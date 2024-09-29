@@ -25,7 +25,6 @@ data class StoreUiState(
     val confirmPassword: String = "",
     val newPassword: String = "",
     val confirmNewPassword: String = "",
-    val userId:String="",
     val errorMessage: String? = null,
     val isLoggedIn: Boolean = false,
     val resetSuccess: Boolean = false,
@@ -46,6 +45,7 @@ data class StoreUiState(
 
 
     // Profile related states
+    val customUserId: String = "",
     val phoneNumber: String = "",
     val defaultAddress: String = "",
     val profileImageUrl: String = "",

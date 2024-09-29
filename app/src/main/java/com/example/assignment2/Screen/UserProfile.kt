@@ -1,6 +1,5 @@
 package com.example.assignment2.Screen
 
-
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -42,7 +41,6 @@ fun UserProfileScreen(navController: NavHostController, viewModel: StoreViewMode
     var isEditable by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
 
-
     // Profile Image Picker
     val imageUri = remember { mutableStateOf<Uri?>(null) }
     val launcher = rememberLauncherForActivityResult(
@@ -54,9 +52,7 @@ fun UserProfileScreen(navController: NavHostController, viewModel: StoreViewMode
         }
     }
 
-
     var isHovered by remember { mutableStateOf(false)}
-
 
     Box(
         modifier = Modifier
@@ -78,7 +74,6 @@ fun UserProfileScreen(navController: NavHostController, viewModel: StoreViewMode
                 modifier = Modifier.padding(bottom = 24.dp)
             )
 
-
             // Profile Image
             Box(contentAlignment = Alignment.Center, modifier = Modifier.size(120.dp)) {
                 if (uiState.profileImageUrl.isNotEmpty()) {
@@ -95,7 +90,6 @@ fun UserProfileScreen(navController: NavHostController, viewModel: StoreViewMode
                         modifier = Modifier.size(100.dp)
                     )
                 }
-
 
                 // Button to change profile image with hover effect
                 Button(
@@ -117,11 +111,7 @@ fun UserProfileScreen(navController: NavHostController, viewModel: StoreViewMode
                     Text(text = "Change Image", color = Color.White)
                 }
 
-
             }
-
-
-
 
 
 
@@ -141,7 +131,6 @@ fun UserProfileScreen(navController: NavHostController, viewModel: StoreViewMode
                 )
             )
 
-
             // Email field (non-editable)
             OutlinedTextField(
                 value = uiState.email,
@@ -157,7 +146,6 @@ fun UserProfileScreen(navController: NavHostController, viewModel: StoreViewMode
                     disabledTextColor = Color.Black
                 )
             )
-
 
             // Phone number field (editable)
             OutlinedTextField(
@@ -177,8 +165,6 @@ fun UserProfileScreen(navController: NavHostController, viewModel: StoreViewMode
             )
 
 
-
-
             // Default Address field (editable)
             OutlinedTextField(
                 value = uiState.defaultAddress,
@@ -195,13 +181,13 @@ fun UserProfileScreen(navController: NavHostController, viewModel: StoreViewMode
                 )
             )
 
-
             // Manage/Edit Profile Button
             Button(
                 onClick = {
                     if (isEditable) {
-                        // Save updated profile data
+                        // Save updated profile data with customUserId
                         viewModel.updateUserProfile(
+                            customUserId = uiState.customUserId,  // Use customUserId from uiState
                             phoneNumber = uiState.phoneNumber,
                             address = uiState.defaultAddress
                         )
@@ -232,7 +218,6 @@ fun UserProfileScreen(navController: NavHostController, viewModel: StoreViewMode
                 )
             }
 
-
             // Logout Button
             Button(
                 onClick = {
@@ -255,8 +240,11 @@ fun UserProfileScreen(navController: NavHostController, viewModel: StoreViewMode
         }
     }
 
-
 }
+
+
+
+
 
 
 

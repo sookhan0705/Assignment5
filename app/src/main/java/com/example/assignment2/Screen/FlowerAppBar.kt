@@ -146,7 +146,7 @@ fun FlowerApp(
                 ResetPasswordScreen(navController = navController, viewModel = viewModel)
             }
             composable(FlowerScreen.FlowerHome.name) {
-                Homepage(viewModel = viewModel,navController)
+                Homepage(navController = navController,viewModel = viewModel)
             }
             composable("search") {
                 Text("Search Screen")  // Replace with actual search screen

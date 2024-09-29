@@ -27,5 +27,6 @@
     <string name="paste_order_id">Paste</string>
     <string name="order_management">Order Management</string>
     <string name="product">product\n</string>
+    <string name="default_web_client_id">63264151919-5tua6tit0r2fad2313cfq2hmgnb2650q.apps.googleusercontent.com</string>
 
 </resources>

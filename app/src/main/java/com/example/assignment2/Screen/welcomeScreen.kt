@@ -4,13 +4,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -18,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-
+import com.example.assignment2.R
 
 
 @Composable
@@ -34,36 +31,23 @@ fun WelcomeScreen(navController: NavHostController) {
             modifier = Modifier.padding(16.dp)
         ) {
             // Logo at the top
-            Box(
+            Image(
+                painter = painterResource(id = R.drawable.bloomthis),
+                contentDescription = "Logo",
                 modifier = Modifier
-                    .padding(bottom=26.dp)
-                    .size(250.dp) // Size of the circle
-                    .background(
-                        color = Color(0xFFFAC8C8).copy(alpha = 0.5f), // Light pink with transparency
-                        shape = androidx.compose.foundation.shape.CircleShape
-                    ),
-                contentAlignment = Alignment.Center // Center the text inside the box
-            ) {
-                Text(
-                    text = "Bloomthis", // Text inside the circle
-                    fontSize = 45.sp,
-                    color = Color.Black,
-                    modifier = Modifier.padding(8.dp)
-                )
-            }
-
-
-            // Spacer to separate buttons from the logo
-            Spacer(modifier = Modifier.height(16.dp))
+                    .padding(bottom = 50.dp)
+                    .size(300.dp)  // Adjust size as needed
+                    .clip(androidx.compose.foundation.shape.CircleShape) // Make the image circular
+            )
 
 
             // Sign Up Button
             Button(
                 onClick = { navController.navigate(FlowerScreen.SignUp.name) }, // Navigate to Sign Up page
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .width(250.dp)
                     .padding(horizontal = 32.dp, vertical = 8.dp),
-                colors = ButtonDefaults.buttonColors(Color(0xFFFF6723))
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFFF6723))
             ) {
                 Text(
                     text = "Sign Up",
@@ -72,14 +56,13 @@ fun WelcomeScreen(navController: NavHostController) {
                 )
             }
 
-
             // Login Button
             Button(
                 onClick = { navController.navigate(FlowerScreen.Login.name) }, // Navigate to Login page
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .width(250.dp)
                     .padding(horizontal = 32.dp, vertical = 8.dp),
-                colors = ButtonDefaults.buttonColors(Color(0xFFFF6723))
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFFF6723))
             ) {
                 Text(
                     text = "Login",
@@ -90,7 +73,6 @@ fun WelcomeScreen(navController: NavHostController) {
         }
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable
