@@ -42,18 +42,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import com.example.assignment2.R
-import com.example.assignment2.ui.theme.Black
 import com.example.assignment2.ui.theme.DarkGray
 import com.example.assignment2.ui.theme.DarkerGray
 import com.example.assignment2.ui.theme.Gray
-import com.example.assignment2.ui.theme.LightPink
 import com.example.assignment2.ui.theme.MidPink
 import com.example.assignment2.ui.theme.Orange
 import com.example.assignment2.ui.theme.White
@@ -61,7 +56,6 @@ import com.example.assignment2.ui.theme.White
 @Composable
 fun TrackOrderScreen(
     viewModel: TrackOrderViewModel = viewModel(),
-    navController: NavController,
     modifier: Modifier = Modifier
 ) {
     var orderId by remember { mutableStateOf("") }
@@ -73,7 +67,7 @@ fun TrackOrderScreen(
     val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
 
-    Column(modifier = Modifier.background(White).verticalScroll(scrollState)) {
+    Column(modifier = modifier.background(White).verticalScroll(scrollState)) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
@@ -166,16 +160,12 @@ fun TrackOrderScreen(
                 }
             }
 
-
             HorizontalDivider(
                 thickness = 1.dp,
                 modifier = Modifier.padding(top = 16.dp, bottom = 16.dp),
                 color = Gray,
             )
-
-
             Spacer(modifier = Modifier.height(16.dp))
-
 
             if (searchClicked) {
                 if (isValidOrderId(orderId)) {
@@ -210,15 +200,14 @@ fun TrackOrderScreen(
                     Text(text = "Invalid Order ID. \nPlease enter a 6-digit number.", color = Color.Red)
                 }
             }
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
 
-
 private fun isValidOrderId(orderId: String): Boolean {
     return orderId.matches(Regex("^[0-9]{6}$"))
 }
-
 
 @Composable
 fun TrackOrderSteps(
@@ -261,7 +250,6 @@ fun TrackOrderSteps(
     )
 }
 
-
 @Composable
 fun TrackOrderCard(
     icon: ImageVector,
@@ -295,7 +283,6 @@ fun TrackOrderCard(
                 )
             }
         }
-
 
         Column {
             Spacer(modifier = Modifier.height(8.dp))

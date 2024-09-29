@@ -27,7 +27,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -38,7 +37,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import com.example.assignment2.Data.OrderHistoryFactory
 import com.example.assignment2.Data.OrderRepo
 import com.example.assignment2.R
@@ -58,12 +56,9 @@ import java.sql.Date
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-
 @Composable
 fun OrderHistoryScreen(
-//    userId: String,
     repository : OrderRepo,
-    navController: NavController,
     modifier: Modifier = Modifier,
     userViewModel :StoreViewModel,
     onTOButtonClicked: () -> Unit = { }
@@ -84,13 +79,13 @@ fun OrderHistoryScreen(
 
     Column(
         modifier = Modifier
-            .padding(20.dp)
+            .padding(start = 20.dp, top = 0.dp, end = 20.dp, bottom = 20.dp)
             .fillMaxSize()
     ) {
         LazyRow(
             modifier = Modifier
                 .padding(8.dp)
-                .padding(top = 12.dp, bottom = 12.dp)
+                .padding(bottom = 12.dp)
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
@@ -154,16 +149,14 @@ fun OrderHistoryScreen(
             onClick = onTOButtonClicked,
             colors = ButtonDefaults.buttonColors(Orange),
             modifier = Modifier
+                .height(30.dp)
                 .fillMaxWidth()
                 .weight(0.1f)
         ) {
             Text(text = stringResource(R.string.track_order))
         }
-        Spacer(modifier = Modifier.height(36.dp))
     }
-
 }
-
 
 @Composable
 fun OrderProductCards(
@@ -175,9 +168,7 @@ fun OrderProductCards(
 ) {
     val context = LocalContext.current
 
-
     var colorStatus = AlmostBlack
-
 
     if (orderStatus == "Active") {
         colorStatus = ColorSuccess
@@ -186,7 +177,6 @@ fun OrderProductCards(
     } else if (orderStatus == "Completed") {
         colorStatus = ColorInfo
     }
-
 
     Card (
         colors = CardDefaults.cardColors(White),
@@ -268,16 +258,12 @@ fun OrderProductCards(
     Spacer(modifier = Modifier.height(28.dp))
 }
 
-
 private fun copyToClipboard(context: Context, orderId: String) {
     val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
     val clip = ClipData.newPlainText("Order ID", orderId)
     clipboardManager.setPrimaryClip(clip)
-
-
     Toast.makeText(context, "Order ID copied to clipboard", Toast.LENGTH_SHORT).show()
 }
-
 
 private fun timestampToString(timestamp: Timestamp?): String {
     return timestamp?.let {

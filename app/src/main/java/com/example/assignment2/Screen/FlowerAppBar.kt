@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.rounded.History
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Person
@@ -27,7 +26,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,7 +43,6 @@ import com.example.assignment2.Data.OrderRepo
 import com.example.assignment2.Data.ProductRepo
 import com.example.assignment2.R
 import com.google.firebase.firestore.FirebaseFirestore
-
 
 // Enum class for different screens in the app
 enum class FlowerScreen(@StringRes val title: Int) {
@@ -66,8 +63,6 @@ enum class FlowerScreen(@StringRes val title: Int) {
     AdminOrderManagement(title = R.string.order_management),
     AdminOrderDetail(title = R.string.order_detail),
     Product(title = R.string.product)
-
-
 }
 
 
@@ -78,10 +73,6 @@ fun FlowerApp(
     productRepo: ProductRepo,
     pyViewModel: PaymentViewModel = viewModel(),
     orderRepo: OrderRepo,
-//    orderHistoryViewModel: FirestoreOrderHistoryViewModel = viewModel(),
-//    orderManagementViewModel: OrderManagementViewModel = viewModel(),
-//    adminOrderDetailViewModel: AdminOrderDetailViewModel = viewModel()
-
 ) {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -96,10 +87,8 @@ fun FlowerApp(
         }
     }
 
-
     // List of screens that do not need the bottom bar
     val noBottomBarScreens = listOf(FlowerScreen.Welcome.name,FlowerScreen.SignUp.name, FlowerScreen.Login.name, FlowerScreen.ResetPassword.name)
-
 
     Scaffold(
         topBar = {
@@ -110,12 +99,10 @@ fun FlowerApp(
             )
         },
         bottomBar = {
-            // Only show the bottom bar if the current screen is not in the "noBottomBarScreens" list
             if (currentScreen.name !in noBottomBarScreens) {
-                AppBottomBar(navController = navController)  // Add BottomAppBar here for certain screens
+                AppBottomBar(navController = navController)
             }
         }
-
 
     ) { innerPadding ->
         NavHost(
@@ -188,8 +175,6 @@ fun FlowerApp(
                 )
             }
 
-
-
             composable(route = FlowerScreen.PaymentMethod.name) {
                 PaymentMethodScreen(
                     db = FirebaseFirestore.getInstance(),
@@ -211,7 +196,6 @@ fun FlowerApp(
                 )
             }
 
-
             composable(route = FlowerScreen.CreditCard.name) {
                 CreditCardScreen(
                     db = FirebaseFirestore.getInstance(),
@@ -221,7 +205,6 @@ fun FlowerApp(
                     modifier = Modifier.fillMaxSize() // Make sure to use fillMaxSize here
                 )
             }
-
 
             composable(route = FlowerScreen.PaymentSuccess.name) {
                 PaymentSuccessfulScreen(
@@ -233,13 +216,11 @@ fun FlowerApp(
             }
 
             composable(FlowerScreen.TrackOrder.name) {
-                TrackOrderScreen(navController = navController)
+                TrackOrderScreen()
             }
-
 
             composable(FlowerScreen.OrderHistory.name) {
                 OrderHistoryScreen(
-                    navController = navController,
                     repository = orderRepo,
                     userViewModel = viewModel,
                     onTOButtonClicked = { navController.navigate(FlowerScreen.TrackOrder.name) },
@@ -279,9 +260,6 @@ fun FlowerAppBar(
     )
 }
 
-
-
-
 @Composable
 fun AppBottomBar(
     navController: NavHostController,  // Pass NavController to handle navigation
@@ -310,7 +288,6 @@ fun AppBottomBar(
                 }
             }
 
-
             IconButton(
                 onClick = { navController.navigate("search") },  // Navigate to Search
                 modifier = Modifier
@@ -322,7 +299,6 @@ fun AppBottomBar(
                     Text(text = "Search")
                 }
             }
-
 
             IconButton(
                 onClick = { navController.navigate(FlowerScreen.Cart.name) },  // Navigate to Cart
@@ -337,7 +313,7 @@ fun AppBottomBar(
             }
 
             IconButton(
-                onClick = { navController.navigate(FlowerScreen.OrderHistory.name) },  // Navigate to Cart
+                onClick = { navController.navigate(FlowerScreen.OrderHistory.name) },  // Navigate to History
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight()
@@ -347,7 +323,6 @@ fun AppBottomBar(
                     Text(text = "History")
                 }
             }
-
 
             IconButton(
                 onClick = { navController.navigate("profile") },  // Navigate to ProfileScreen
