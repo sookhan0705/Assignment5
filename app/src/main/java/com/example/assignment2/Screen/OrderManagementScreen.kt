@@ -58,16 +58,15 @@ fun OrderManagementScreen(
 ) {
     val orders by viewModel.filteredOrderList.collectAsStateWithLifecycle()
 
-
     Column(
         modifier = Modifier
-            .padding(20.dp)
+            .padding(start = 20.dp, top = 0.dp, end = 20.dp, bottom = 20.dp)
             .fillMaxSize()
     ) {
         LazyRow(
             modifier = Modifier
                 .padding(8.dp)
-                .padding(top = 12.dp, bottom = 12.dp)
+                .padding(bottom = 12.dp)
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
@@ -102,7 +101,6 @@ fun OrderManagementScreen(
             }
         }
 
-
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
@@ -110,113 +108,110 @@ fun OrderManagementScreen(
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             items(orders) { order ->
-                orderCard(order.OrderId, order.OrderDateTime, order.OrderStatus, order.TotalAmount, order.CustomerIdFk)
+                var colorStatus = AlmostBlack
+
+                if (order.OrderStatus == "Active") {
+                    colorStatus = ColorSuccess
+                } else if (order.OrderStatus == "Cancelled") {
+                    colorStatus = ColorError
+                } else if (order.OrderStatus == "Completed") {
+                    colorStatus = ColorInfo
+                }
+
+                Box(
+                    modifier = modifier
+                        .shadow(
+                            elevation = 3.dp,
+                            shape = RoundedCornerShape(8.dp),
+                            ambientColor = LightPink
+                        )
+                        .background(White),
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .padding(16.dp)
+                    ) {
+                        Row (
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Column {
+                                Text(
+                                    text = order.OrderId,
+                                    color = DarkerGray,
+                                    fontWeight = FontWeight.Normal,
+                                    modifier = Modifier
+                                )
+                                Text(
+                                    text = timestampToString(order.OrderDateTime),
+                                    color = DarkerGray,
+                                    fontWeight = FontWeight.Normal,
+                                    modifier = Modifier
+                                )
+                            }
+                            Text(
+                                text = order.OrderStatus,
+                                color = colorStatus,
+                                fontWeight = FontWeight.SemiBold,
+                                modifier = Modifier
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Row (
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.order_price, order.TotalAmount),
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 20.sp,
+                                color = Black
+                            )
+                        }
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        ) {
+                            Text(
+                                text = order.CustomerIdFk,
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize = 20.sp,
+                                color = AlmostBlack
+                            )
+                            Button(
+                                onClick = {  navController.navigate("AdminOrderDetailScreen/${order.OrderId}") },
+                                colors = ButtonDefaults.buttonColors(MidPink),
+                                modifier = Modifier
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.view_detail).uppercase()
+                                )
+                            }
+                        }
+                    }
+                }
                 Spacer(modifier = Modifier.height(16.dp))
             }
         }
     }
 }
 
-
-
-
-@Composable
-private fun orderCard(
-    orderId: String,
-    orderDateTime: Timestamp,
-    orderStatus: String,
-    totalAmount: String,
-    customerIdFk: String,
-    modifier: Modifier = Modifier
-) {
-    var colorStatus = AlmostBlack
-
-
-    if (orderStatus == "Active") {
-        colorStatus = ColorSuccess
-    } else if (orderStatus == "Cancelled") {
-        colorStatus = ColorError
-    } else if (orderStatus == "Completed") {
-        colorStatus = ColorInfo
-    }
-
-
-    Box(
-        modifier = modifier
-            .shadow(
-                elevation = 3.dp,
-                shape = RoundedCornerShape(8.dp),
-                ambientColor = LightPink
-            )
-            .background(White),
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(16.dp)
-        ) {
-            Row (
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Column {
-                    Text(
-                        text = orderId,
-                        color = DarkerGray,
-                        fontWeight = FontWeight.Normal,
-                        modifier = Modifier
-                    )
-                    Text(
-                        text = timestampToString(orderDateTime),
-                        color = DarkerGray,
-                        fontWeight = FontWeight.Normal,
-                        modifier = Modifier
-                    )
-                }
-                Text(
-                    text = orderStatus,
-                    color = colorStatus,
-                    fontWeight = FontWeight.SemiBold,
-                    modifier = Modifier
-                )
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-            Row (
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    text = stringResource(id = R.string.order_price, totalAmount),
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp,
-                    color = Black
-                )
-            }
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
-                Text(
-                    text = customerIdFk,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 20.sp,
-                    color = AlmostBlack
-                )
-                Button(
-                    onClick = { /*TODO*/ },
-                    colors = ButtonDefaults.buttonColors(MidPink),
-                    modifier = Modifier
-                ) {
-                    Text(
-                        text = stringResource(R.string.view_detail).uppercase()
-                    )
-                }
-            }
-        }
-    }
-
-
-}
+//@Composable
+//private fun orderCard(
+//    orderId: String,
+//    orderDateTime: Timestamp,
+//    orderStatus: String,
+//    totalAmount: String,
+//    customerIdFk: String,
+//    navController: NavController,
+//    order: orders,
+//    modifier: Modifier = Modifier
+//) {
+//
+//
+//
+//}
 
 
 private fun timestampToString(timestamp: Timestamp?): String {

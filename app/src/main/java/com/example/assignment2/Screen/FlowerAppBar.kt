@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.rounded.AddBox
+import androidx.compose.material.icons.rounded.Checklist
 import androidx.compose.material.icons.rounded.History
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Person
@@ -42,6 +44,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.assignment2.Data.OrderRepo
 import com.example.assignment2.Data.ProductRepo
 import com.example.assignment2.R
+import com.example.assignment2.ui.theme.LightPink
 import com.google.firebase.firestore.FirebaseFirestore
 
 // Enum class for different screens in the app
@@ -74,21 +77,35 @@ fun FlowerApp(
     pyViewModel: PaymentViewModel = viewModel(),
     orderRepo: OrderRepo,
 ) {
-    val navController = rememberNavController()
-    val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = backStackEntry?.destination?.route
-    val currentScreen = when {
-        currentRoute == null -> FlowerScreen.Welcome
-        currentRoute.startsWith("ProductDetailScreen/") -> FlowerScreen.ProductInventory
-        else -> try {
-            FlowerScreen.valueOf(currentRoute)
-        } catch (e: IllegalArgumentException) {
-            FlowerScreen.Welcome
+        val navController = rememberNavController()
+        val backStackEntry by navController.currentBackStackEntryAsState()
+        val currentRoute = backStackEntry?.destination?.route
+        val currentScreen = when {
+            currentRoute == null -> FlowerScreen.Welcome
+            currentRoute.startsWith("ProductDetailScreen/") -> FlowerScreen.ProductInventory
+            currentRoute.startsWith("AdminOrderDetailScreen/") -> FlowerScreen.AdminOrderManagement
+            else -> try {
+                FlowerScreen.valueOf(currentRoute)
+            } catch (e: IllegalArgumentException) {
+                FlowerScreen.Welcome
+            }
         }
-    }
 
     // List of screens that do not need the bottom bar
-    val noBottomBarScreens = listOf(FlowerScreen.Welcome.name,FlowerScreen.SignUp.name, FlowerScreen.Login.name, FlowerScreen.ResetPassword.name)
+    val noBottomBarScreens = listOf(
+        FlowerScreen.Welcome.name,
+        FlowerScreen.SignUp.name,
+        FlowerScreen.Login.name,
+        FlowerScreen.ResetPassword.name,
+        FlowerScreen.TrackOrder.name,
+    )
+
+    val AdminBottomBarScreens = listOf(
+        FlowerScreen.ProductInventory.name,
+        FlowerScreen.AddProduct.name,
+        FlowerScreen.AdminOrderManagement.name,
+        FlowerScreen.AdminOrderDetail.name
+    )
 
     Scaffold(
         topBar = {
@@ -101,6 +118,8 @@ fun FlowerApp(
         bottomBar = {
             if (currentScreen.name !in noBottomBarScreens) {
                 AppBottomBar(navController = navController)
+            } else if (currentScreen.name in AdminBottomBarScreens) {
+                AdminAppBottomBar(navController = navController)
             }
         }
 
@@ -134,6 +153,8 @@ fun FlowerApp(
             composable(FlowerScreen.Profile.name) {
                 UserProfileScreen(navController = navController,viewModel = viewModel)
             }
+
+            // jun yi
             composable(FlowerScreen.ProductInventory.name) {
                 ProductInventoryScreen(navController = navController, repository = productRepo)
             }
@@ -215,6 +236,7 @@ fun FlowerApp(
                 )
             }
 
+            // sook han
             composable(FlowerScreen.TrackOrder.name) {
                 TrackOrderScreen()
             }
@@ -227,11 +249,23 @@ fun FlowerApp(
                 )
             }
 
+            composable(FlowerScreen.AdminOrderManagement.name) {
+                OrderManagementScreen(
+                    navController = navController
+                )
+            }
+
+            composable("AdminOrderDetailScreen/{orderId}") {backStackEntry ->
+                val orderId = backStackEntry.arguments?.getString("orderId")
+                if (orderId != null) {
+                    AdminOrderDetailScreen(orderId = orderId)
+                } else {
+                    Log.e("Navigation", "Order ID is null or invalid")
+                }
+            }
         }
     }
 }
-
-
 
 private fun cancelPaymentAndNavigateToStart(
     viewModel: PaymentViewModel,
@@ -266,7 +300,7 @@ fun AppBottomBar(
     modifier: Modifier = Modifier
 ) {
     BottomAppBar(
-        containerColor = Color(0xFFFFC1E3),
+        containerColor = LightPink,
         modifier = modifier
             .fillMaxWidth()
     ) {
@@ -333,6 +367,49 @@ fun AppBottomBar(
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Icon(imageVector = Icons.Rounded.Person, contentDescription = null, modifier = Modifier.size(24.dp))
                     Text(text = "Profile")
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun AdminAppBottomBar(
+    navController: NavHostController,  // Pass NavController to handle navigation
+    modifier: Modifier = Modifier
+) {
+    BottomAppBar(
+        containerColor = LightPink,
+        modifier = modifier
+            .fillMaxWidth()
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            modifier = modifier
+                .fillMaxSize()
+        ) {
+            IconButton(
+                onClick = { navController.navigate(FlowerScreen.ProductInventory.name) },
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Icon(imageVector = Icons.Rounded.AddBox, contentDescription = null, modifier = Modifier.size(24.dp))
+                    Text(text = "Inventory")
+                }
+            }
+
+            IconButton(
+                onClick = { navController.navigate(FlowerScreen.AdminOrderManagement.name) },
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Icon(imageVector = Icons.Rounded.Checklist, contentDescription = null, modifier = Modifier.size(24.dp))
+                    Text(text = "Order")
                 }
             }
         }

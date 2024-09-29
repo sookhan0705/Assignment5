@@ -65,7 +65,6 @@ import java.util.Locale
 fun AdminOrderDetailScreen(
     orderId: String,
     viewModel: AdminOrderDetailViewModel = viewModel(),
-    navController: NavController,
     modifier: Modifier = Modifier
 ) {
     val selectedOrder by viewModel.selectedOrder.collectAsState()
