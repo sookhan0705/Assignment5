@@ -11,6 +11,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -43,7 +46,7 @@ fun ProductScreen(
                         productQuantity = document.getString("productQuantity") ?: "0",
                         productCategory = document.getString("productCategory") ?: "",
                         photo = document.getString("photo") ?: "",
-                        LastRestock = document.getString("LastRestock") ?: ""
+                        LastRestock = document.getString("lastRestock") ?: ""
                     )
                 }
                 products = fetchedProducts
@@ -102,7 +105,7 @@ fun ProductScreen(
 @Composable
 fun ProductItem(
     product: Product,
-    cartQuantity: Int, // Current quantity in the cart
+    cartQuantity: Int,
     onQuantityChanged: (Int) -> Unit,
     db: FirebaseFirestore
 ) {
@@ -112,25 +115,50 @@ fun ProductItem(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 20.dp),
+            .padding(vertical = 4.dp), // Adjust padding for better spacing
         verticalAlignment = Alignment.CenterVertically
     ) {
         // Product Image using a placeholder if photo URL is available
         Image(
             painter = rememberImagePainter(data = product.photo),
             contentDescription = null,
-            modifier = Modifier.size(100.dp),
+            modifier = Modifier.size(80.dp),
             contentScale = ContentScale.Crop
         )
 
 
-        Spacer(modifier = Modifier.width(16.dp))
+        Spacer(modifier = Modifier.width(10.dp))
 
 
-        Column(modifier = Modifier.weight(1f)) {
-            Text(text = product.productName, fontSize = 16.sp, color = Color.Black)
-            Text(text = "Category: ${product.productCategory}", fontSize = 14.sp, color = Color.Gray)
-            Text(text = "RM${product.productPrice}", fontSize = 16.sp, color = Color.Black)
+        Column(modifier = Modifier
+            .weight(1.5f)
+            .padding(horizontal = 4.dp)
+            .wrapContentWidth()) {
+            // Enhanced product name
+            Text(
+                text = product.productName,
+                fontSize = 16.sp,
+                color = Color.Black,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier
+                    .padding(bottom = 2.dp)
+                    .widthIn(max = 160.dp) // Set maximum width
+            )
+            // Enhanced category display
+            Text(
+                text = "Category: ${product.productCategory}",
+                fontSize = 13.sp,
+                color = Color.Gray,
+                fontStyle = FontStyle.Italic // Italic style for differentiation
+            )
+            // Enhanced price display
+            Text(
+                text = "Price: RM${product.productPrice}",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium, // Medium weight for visibility
+                color = Color.DarkGray // Darker color for emphasis
+            )
         }
 
 
@@ -154,10 +182,6 @@ fun ProductItem(
                 val oldQuantity = quantity
                 quantity += 1
                 onQuantityChanged(quantity)
-
-
-                // Update cart and product quantity
-                updateCartItemQuantity(product, quantity, oldQuantity, db)
             }) {
                 Text(text = "+", fontSize = 18.sp)
             }
@@ -256,3 +280,4 @@ fun updateProductQuantity(productId: String, quantityChange: Int, db: FirebaseFi
             println("Error getting product document: $exception")
         }
 }
+

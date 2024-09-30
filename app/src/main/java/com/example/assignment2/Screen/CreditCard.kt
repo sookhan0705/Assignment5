@@ -1,8 +1,11 @@
 package com.example.assignment2.Screen
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -19,8 +22,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.text.input.KeyboardType
+import com.example.assignment2.Data.CreditCard
 import com.example.assignment2.R
 import com.example.assignment2.ui.theme.Orange
 import com.example.assignment2.ui.theme.White
@@ -30,9 +35,11 @@ import com.google.firebase.firestore.FirebaseFirestore
 @Composable
 fun CreditCardScreen(
     db: FirebaseFirestore,
+    viewModel: CreditCardViewModel,
     onNextButtonClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val scrollState = rememberScrollState()
     var name by rememberSaveable { mutableStateOf("") }
     var cardNumber by rememberSaveable { mutableStateOf("") }
     var expDate by rememberSaveable { mutableStateOf("") }
@@ -50,7 +57,8 @@ fun CreditCardScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
-            .background(White),
+            .background(White)
+            .verticalScroll(scrollState),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
     ) {
@@ -193,6 +201,16 @@ fun CreditCardScreen(
                 nameError = !validateName(name)
 
 
+                val newCard = CreditCard(
+                    cardName = name,  // Assuming `name` is defined in your state
+                    cardNumber = cardNumber,  // Assuming `cardNumber` is defined in your state
+                    expDate = expDate,  // Assuming `expDate` is defined in your state
+                    cvv = cvv  // Assuming `cvv` is defined in your state
+                )
+                viewModel.insertCreditCard(newCard){
+                    Log.d("CreditCardScreen", "Inserted card successfully.")
+                    onNextButtonClicked()
+                }
                 if (!cardNumberError && !expDateError && !cvvError && !nameError) {
                     saveCreditCardInfo(db, name, cardNumber, expDate, cvv)
                     // Save to Firestore
@@ -270,12 +288,7 @@ fun validateName(name: String): Boolean {
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun CreditCardScreenPreview() {
-    val fakeDb = FirebaseFirestore.getInstance() // Using a real instance for preview, but no actual Firebase operations will be performed.
-    CreditCardScreen(db = fakeDb, onNextButtonClicked = {})
-}
+
 
 
 

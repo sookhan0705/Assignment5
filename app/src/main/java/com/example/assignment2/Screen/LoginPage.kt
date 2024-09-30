@@ -105,7 +105,7 @@ fun LoginScreen(navController: NavHostController, viewModel: StoreViewModel) {
                                 viewModel.clearFields()
                                 if (role == "admin") {
                                     // Navigate to Admin Profile Page
-                                    navController.navigate(FlowerScreen.Profile.name)
+                                    navController.navigate(FlowerScreen.ProductInventory.name)
                                 } else {
                                     // Navigate to User HomePage
                                     navController.navigate(FlowerScreen.FlowerHome.name)

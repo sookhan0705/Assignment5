@@ -1,3 +1,4 @@
+package com.example.assignment2.Screen
 import android.app.DatePickerDialog
 import android.content.Context
 import android.widget.DatePicker
@@ -22,20 +23,20 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
 import coil.compose.rememberImagePainter
 import com.example.assignment2.Data.CheckoutItem
 import com.example.assignment2.Data.Product
-import com.example.assignment2.Screen.CartViewModel
 import com.example.assignment2.ui.theme.Orange
+
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.*
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.assignment2.Screen.StoreViewModel
 
 
 @Composable
 fun CartScreen(context: Context, db: FirebaseFirestore, onCheckoutClicked: () -> Unit,
-               viewModel: CartViewModel = viewModel (),
+               viewModel: CartViewModel = viewModel(),
                userViewModel:StoreViewModel) {
     var cartItems by remember { mutableStateOf(listOf<Product>()) }
     var loading by remember { mutableStateOf(true) }
@@ -44,7 +45,6 @@ fun CartScreen(context: Context, db: FirebaseFirestore, onCheckoutClicked: () ->
     var selectedDeliveryTime by remember { mutableStateOf("MORNING\n9AM - 2PM") }
     var message by remember { mutableStateOf("") }
     var userId= userViewModel.getUserId()
-
 
     // Fetch cart items from Firestore's Cart collection
     LaunchedEffect(Unit) {
@@ -155,8 +155,8 @@ fun CartScreen(context: Context, db: FirebaseFirestore, onCheckoutClicked: () ->
             CheckoutSection(
                 totalAmount = "RM${"%.2f".format(totalAmount)}",
                 onCheckoutClicked = {
-                    // Prepare checkout items
                     viewModel.AddOrder(totalAmount.toString(),userId.toString())
+                    // Prepare checkout items
                     val checkoutItems = cartItems.map { cartItem ->
                         CheckoutItem(
                             productId = cartItem.productId,
@@ -423,6 +423,8 @@ fun DeliveryTimeSelector(
         }
     }
 }
+
+
 
 
 

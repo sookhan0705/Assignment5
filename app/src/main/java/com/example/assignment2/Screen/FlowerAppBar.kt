@@ -1,6 +1,6 @@
 package com.example.assignment2.Screen
 
-import CartScreen
+
 import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
@@ -13,10 +13,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.Logout
 import androidx.compose.material.icons.rounded.AddBox
 import androidx.compose.material.icons.rounded.Checklist
 import androidx.compose.material.icons.rounded.History
 import androidx.compose.material.icons.rounded.Home
+import androidx.compose.material.icons.rounded.Logout
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.ShoppingCart
@@ -76,6 +78,7 @@ fun FlowerApp(
     productRepo: ProductRepo,
     pyViewModel: PaymentViewModel = viewModel(),
     orderRepo: OrderRepo,
+    CCviewModel: CreditCardViewModel
 ) {
         val navController = rememberNavController()
         val backStackEntry by navController.currentBackStackEntryAsState()
@@ -123,7 +126,7 @@ fun FlowerApp(
             if (currentScreen.name !in noBottomBarScreens) {
                 AppBottomBar(navController = navController)
             } else if (currentScreen.name in AdminBottomBarScreens) {
-                AdminAppBottomBar(navController = navController)
+                AdminAppBottomBar(navController = navController,viewModel=viewModel)
             }
         }
 
@@ -224,10 +227,11 @@ fun FlowerApp(
             composable(route = FlowerScreen.CreditCard.name) {
                 CreditCardScreen(
                     db = FirebaseFirestore.getInstance(),
+                    viewModel = CCviewModel,
                     onNextButtonClicked = {
                         navController.navigate(FlowerScreen.PaymentSuccess.name)
                     },
-                    modifier = Modifier.fillMaxSize() // Make sure to use fillMaxSize here
+                    modifier = Modifier.fillMaxSize()// Make sure to use fillMaxSize here
                 )
             }
 
@@ -327,18 +331,6 @@ fun AppBottomBar(
             }
 
             IconButton(
-                onClick = { navController.navigate("search") },  // Navigate to Search
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxHeight()
-            ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Icon(imageVector = Icons.Rounded.Search, contentDescription = null, modifier = Modifier.size(24.dp))
-                    Text(text = "Search")
-                }
-            }
-
-            IconButton(
                 onClick = { navController.navigate(FlowerScreen.Cart.name) },  // Navigate to Cart
                 modifier = Modifier
                     .weight(1f)
@@ -380,7 +372,8 @@ fun AppBottomBar(
 @Composable
 fun AdminAppBottomBar(
     navController: NavHostController,  // Pass NavController to handle navigation
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: StoreViewModel
 ) {
     BottomAppBar(
         containerColor = LightPink,
@@ -414,6 +407,19 @@ fun AdminAppBottomBar(
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Icon(imageVector = Icons.Rounded.Checklist, contentDescription = null, modifier = Modifier.size(24.dp))
                     Text(text = "Order")
+                }
+            }
+
+            IconButton(
+                onClick = {viewModel.logout()
+                    navController.navigate(FlowerScreen.Welcome.name)},
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Icon(imageVector = Icons.AutoMirrored.Rounded.Logout, contentDescription = null, modifier = Modifier.size(24.dp))
+                    Text(text = "LogOut")
                 }
             }
         }

@@ -57,7 +57,7 @@ fun Homepage(navController: NavHostController, viewModel: StoreViewModel) {
             }
         )
         // Banner Section
-        Banner(bannerText = uiState.bannerText)
+        Banner(bannerText = uiState.bannerText,navController)
 
         // Category Title
         Box(
@@ -99,10 +99,10 @@ fun Homepage(navController: NavHostController, viewModel: StoreViewModel) {
         }
 
         // Product List Section (Filtered by selected category)
-        ProductList(products = uiState.products)  // Display the filtered products
+        ProductList(products = uiState.products,navController)  // Display the filtered products
 
         // "See All" Button
-        TextButton(onClick = { navController.navigate(FlowerScreen.Profile.name) },
+        TextButton(onClick = { navController.navigate(FlowerScreen.Product.name) },
             modifier = Modifier
                 .fillMaxWidth()) {
             Text(
@@ -155,7 +155,7 @@ fun SearchRow(searchQuery: String, onSearchChange: (String) -> Unit, onSearchCli
 }
 
 @Composable
-fun Banner(bannerText: String) {
+fun Banner(bannerText: String,navController: NavHostController) {
     ConstraintLayout(
         modifier = Modifier
             .fillMaxWidth()
@@ -199,6 +199,7 @@ fun Banner(bannerText: String) {
             color = Color.White,
             modifier = Modifier
                 .padding(start = 20.dp, top = 15.dp, bottom = 20.dp)
+                .clickable { navController.navigate(FlowerScreen.Product.name) }
                 .constrainAs(button) {
                     top.linkTo(text.bottom)
                     bottom.linkTo(parent.bottom)
@@ -266,7 +267,7 @@ fun CategoryList(categories: List<CategoryItems>, onCategoryClick: (String) -> U
 
 
 @Composable
-fun ProductList(products: List<ProductItem>) {
+fun ProductList(products: List<ProductItem>,navController: NavHostController) {
     LazyRow(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(16.dp),
@@ -280,6 +281,7 @@ fun ProductList(products: List<ProductItem>) {
                     .shadow(3.dp, shape = RoundedCornerShape(10.dp))
                     .background(Color(0xFFFDEDED), shape = RoundedCornerShape(10.dp))
                     .fillMaxWidth()
+                    .clickable {  navController.navigate(FlowerScreen.Product.name) }
             ) {
                 ConstraintLayout(modifier = Modifier.height(IntrinsicSize.Max)) {
                     val (topImg, name, price) = createRefs()
