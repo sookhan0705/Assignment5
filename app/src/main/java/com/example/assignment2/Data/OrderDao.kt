@@ -9,8 +9,12 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface OrderDao {
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertOrders(orders: Order)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertOrders(vararg orders: Order)
+
+    // Or to insert a list of orders:
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertOrders(orders: List<Order>)
 
 
     @Query("SELECT * FROM orders WHERE CustomerIdFk = :userId")
@@ -18,7 +22,7 @@ interface OrderDao {
 
 
     @Query("SELECT * FROM orders")
-    suspend fun getAllOrders(): List<Order>
+    fun getAllOrders(): Flow<List<Order>>
 
 
     @Query("DELETE FROM orders")

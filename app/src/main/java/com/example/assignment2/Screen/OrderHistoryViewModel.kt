@@ -26,7 +26,11 @@ class FirestoreOrderHistoryViewModel(private val repository: OrderRepo) : ViewMo
         filterOrders(null)
         getOrderList()
         syncOrder()
-
+        viewModelScope.launch {
+            repository.getAllOrders().collect { orders ->
+                _orderList.value = orders
+            }
+        }
     }
 
 

@@ -5,16 +5,16 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.tasks.await
 
 
 class OrderRepo(private val orderDao: OrderDao) {
 
 
-    suspend fun getAllOrders():List<Order>{
+    fun getAllOrders(): Flow<List<Order>> {
         return orderDao.getAllOrders()
     }
-
 
     suspend fun syncOrderFromFireStore(){
         val db = Firebase.firestore
